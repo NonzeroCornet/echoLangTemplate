@@ -50,15 +50,19 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
             code += "if(" + " ".join(condition) + ") {" + words[1] + "()}\n"
         elif words[0] == "say":
           if (len(lines[i].split("\"")) > 1):
-            code += "document.body.innerHTML += \"" + lines[i].split(
-              "\"")[1] + "<br>\";\n"
+            code += "document.getElementById(\"body\").innerHTML += \"" + lines[
+              i].split("\"")[1] + "<br>\";\n"
           else:
-            code += "document.body.innerHTML += " + words[1] + "+\"<br>\";\n"
+            code += "document.getElementById(\"body\").innerHTML += " + words[
+              1] + "+\"<br>\";\n"
         elif words[0] == "override":
           code += words[len(words) - 1] + " = "
           del words[0]
           del words[len(words) - 1]
-          code += "".join(words) + ";\n"
+          if words[0][0] == "\"":
+            code += " ".join(words) + ";\n"
+          else:
+            code += words[0] + ";\n"
         elif words[0] == "overrideReal":
           code += words[len(words) - 1] + " = Number(prompt("
           del words[0]
@@ -70,7 +74,7 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
           del words[len(words) - 1]
           code += " ".join(words) + ");\n"
         elif words[0] == "mute":
-          code += "document.body.innerHTML = \"\";\n"
+          code += "document.getElementById(\"body\").innerHTML = \"\";\n"
         elif words[0] == "wait":
           code += "setTimeout(function() {" + words[
             1] + "(); document.getElementsByTagName(\"title\")[0].innerHTML = title; document.getElementById(\"icon\").href = icon}, " + words[
@@ -84,9 +88,9 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
   with open('temp/' + sys.argv[1].replace(".room", "") + '/index.html',
             'wt') as f:
     f.write(
-      "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n  <script defer>\ntry{\n"
+      "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n</head>\n<body>\n  <div id=\"body\"></div>\n  <script defer>\ntry{\n"
       + pre + code + post +
-      "} catch (inernalError182939227374) {alert(inernalError182939227374)}\n  </script>\n</head>\n<body>\n</body>"
+      "} catch (inernalError182939227374) {alert(inernalError182939227374); console.log(inernalError182939227374)}\n  </script>\n</body>"
     )
     f.close()
 
