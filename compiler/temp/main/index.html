@@ -12,11 +12,15 @@ let x = 0;
 let y = 0;
 let z = 0;
 let err = "Please insert numbers greater than zero.";
+document.body.innerHTML += "A simple calculator program written in echoLang<br>";
+setTimeout(function() {getNums()}, 100);
+function getNums() {
 x = Number(prompt("Number 1:"));
 y = Number(prompt("Number 2:"));
 title = x+"+"+y;
 if(x>0) {IFXG01()}
 if(x<=0) {IFXLE01()}
+}
 function IFXG01() {
 if(y>0) {IFYG01()}
 if(y<=0) {IFYLE01()}

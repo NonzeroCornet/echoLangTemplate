@@ -5,13 +5,17 @@ init y 0
 init z 0
 init err "Please insert numbers greater than zero."
 
+say "A simple calculator program written in echoLang"
+
+wait getNums 100
+
+{set getNums
 overrideReal "Number 1:" x
 overrideReal "Number 2:" y
-
 override x+"+"+y title
-
 echo IFXG01 x > 0
 echo IFXLE01 x <= 0
+}
 
 {set IFXG01
 echo IFYG01 y > 0

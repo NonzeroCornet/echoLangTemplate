@@ -46,7 +46,10 @@ if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
             code += "if(" + words[2] + words[3] + words[4] + ") {" + words[
               1] + "()}\n"
         elif words[0] == "say":
-          code += "document.body.innerHTML += " + words[1] + "+\"<br>\";\n"
+          if(len(lines[i].split("\"")) > 1):
+            code += "document.body.innerHTML += \"" + lines[i].split("\"")[1] + "<br>\";\n"
+          else:
+            code += "document.body.innerHTML += " + words[1] + "+\"<br>\";\n"
         elif words[0] == "override":
           code += words[len(words) - 1] + " = "
           del words[0]
@@ -64,6 +67,8 @@ if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
           code += " ".join(words) + ");\n"
         elif words[0] == "mute":
           code += "document.body.innerHTML = \"\";\n"
+        elif words[0] == "wait":
+          code += "setTimeout(function() {"+words[1]+"()}, "+words[2]+");\n"
   
   if not os.path.exists("./temp/" + sys.argv[1].replace(".room", "")):
     os.mkdir("./temp/" + sys.argv[1].replace(".room", ""))
