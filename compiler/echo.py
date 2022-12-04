@@ -5,16 +5,22 @@ echoLang created by Brian Dean Ullery Copyright 2022
 import sys
 import os
 from http.server import HTTPServer, CGIHTTPRequestHandler
+import argparse
 
-os.chdir("compiler")
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--port", dest= "port" ,type=int, default= "80", help="Website Port [default: 80]")
+parser.add_argument('file', metavar= 'filename', type=str, help='.room File to Compile')
+
+args = parser.parse_args()
+
 
 pre = "var title = \"Echo! echo...\";\nvar icon = \"\";\n"
 code = ""
 post = "document.getElementsByTagName(\"title\")[0].innerHTML = title;\ndocument.getElementById(\"icon\").href = icon;\n"
 
 updateCalled = False
-if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
-  with open("../" + sys.argv[1], 'r+') as f:
+if args.file.split(".")[len(args.file.split(".")) - 1] == "room":
+  with open(args.file, 'r+') as f:
     contents = f.read()
     lines = contents.split("\n")
     for i in range(len(lines)):
@@ -79,9 +85,9 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
           code += "document.addEventListener(\"keydown\",(e)=>{if(e.key===\"" + words[
             1] + "\"){" + words[2] + "()}});\n"
 
-  if not os.path.exists("./temp/" + sys.argv[1].replace(".room", "")):
-    os.mkdir("./temp/" + sys.argv[1].replace(".room", ""))
-  with open('temp/' + sys.argv[1].replace(".room", "") + '/index.html',
+  if not os.path.exists("./temp/" + args.file.replace(".room", "")):
+    os.mkdir("./temp/" + args.file.replace(".room", ""))
+  with open('temp/' + args.file.replace(".room", "") + '/index.html',
             'wt') as f:
     f.write(
       "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n  <script defer>\ntry{\n"
@@ -90,8 +96,8 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
     )
     f.close()
 
-  os.chdir('./temp/' + sys.argv[1].replace(".room", ""))
-  server_object = HTTPServer(server_address=('', 80),
+  os.chdir('./temp/' + args.file.replace(".room", ""))
+  server_object = HTTPServer(server_address=('', args.port),
                              RequestHandlerClass=CGIHTTPRequestHandler)
-  print("Serving at URL: http://localhost:80/")
+  print(f"Serving at URL: http://localhost:{args.port}/")
   server_object.serve_forever()
