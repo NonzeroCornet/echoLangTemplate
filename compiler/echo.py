@@ -37,15 +37,17 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
         elif words[0] == "}":
           if updateCalled:
             code += "}, 10);\n"
-            updateCalled = False;
+            updateCalled = False
           else:
             code += "}\n"
         elif words[0] == "echo":
           if (len(words) == 2):
             code += words[1] + "();\n"
           else:
-            code += "if(" + words[2] + words[3] + words[4] + ") {" + words[
-              1] + "()}\n"
+            condition = words[:]
+            condition.pop(0)
+            condition.pop(0)
+            code += "if(" + " ".join(condition) + ") {" + words[1] + "()}\n"
         elif words[0] == "say":
           if (len(lines[i].split("\"")) > 1):
             code += "document.body.innerHTML += \"" + lines[i].split(
