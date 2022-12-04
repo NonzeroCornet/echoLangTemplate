@@ -8,20 +8,20 @@ from http.server import HTTPServer, CGIHTTPRequestHandler
 
 os.chdir("compiler")
 
-pre = "let title = \"Echo! echo...\";\nlet icon = \"\";\n"
+pre = "var title = \"Echo! echo...\";\nvar icon = \"\";\n"
 code = ""
 post = "document.getElementsByTagName(\"title\")[0].innerHTML = title;\ndocument.getElementById(\"icon\").href = icon;\n"
 
 updateCalled = False
-if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
-  with open("../"+sys.argv[1], 'r+') as f:
+if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
+  with open("../" + sys.argv[1], 'r+') as f:
     contents = f.read()
     lines = contents.split("\n")
     for i in range(len(lines)):
       if lines[i] and lines[i][0] != "#":
         words = lines[i].split()
         if words[0] == "init":
-          code += "let " + words[1] + " = "
+          code += "var " + words[1] + " = "
           words.pop(0)
           words.pop(0)
           if words[0][0] == "\"":
@@ -30,13 +30,14 @@ if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
             code += words[0] + ";\n"
         elif words[0] == "{set":
           if words[1] == "UPDATE":
-            code += "let UPDATE = setInterval(function() {\n"
+            code += "var UPDATE = setInterval(function() {\n"
             updateCalled = True
           else:
             code += "function " + words[1] + "() {\n"
         elif words[0] == "}":
           if updateCalled:
-            code += "}, 0);\n"
+            code += "}, 10);\n"
+            updateCalled = False;
           else:
             code += "}\n"
         elif words[0] == "echo":
@@ -46,8 +47,9 @@ if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
             code += "if(" + words[2] + words[3] + words[4] + ") {" + words[
               1] + "()}\n"
         elif words[0] == "say":
-          if(len(lines[i].split("\"")) > 1):
-            code += "document.body.innerHTML += \"" + lines[i].split("\"")[1] + "<br>\";\n"
+          if (len(lines[i].split("\"")) > 1):
+            code += "document.body.innerHTML += \"" + lines[i].split(
+              "\"")[1] + "<br>\";\n"
           else:
             code += "document.body.innerHTML += " + words[1] + "+\"<br>\";\n"
         elif words[0] == "override":
@@ -68,19 +70,24 @@ if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
         elif words[0] == "mute":
           code += "document.body.innerHTML = \"\";\n"
         elif words[0] == "wait":
-          code += "setTimeout(function() {"+words[1]+"(); document.getElementsByTagName(\"title\")[0].innerHTML = title; document.getElementById(\"icon\").href = icon}, "+words[2]+");\n"
-  
+          code += "setTimeout(function() {" + words[
+            1] + "(); document.getElementsByTagName(\"title\")[0].innerHTML = title; document.getElementById(\"icon\").href = icon}, " + words[
+              2] + ");\n"
+        elif words[0] == "listen":
+          code += "document.addEventListener(\"keydown\",(e)=>{if(e.key===\"" + words[
+            1] + "\"){" + words[2] + "()}});\n"
+
   if not os.path.exists("./temp/" + sys.argv[1].replace(".room", "")):
     os.mkdir("./temp/" + sys.argv[1].replace(".room", ""))
   with open('temp/' + sys.argv[1].replace(".room", "") + '/index.html',
             'wt') as f:
     f.write(
-      "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n</head>\n<body>\n  <script defer>\ntry{\n"
+      "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n  <script defer>\ntry{\n"
       + pre + code + post +
-      "} catch (inernalError182939227374) {alert(inernalError182939227374)}\n  </script>\n</body>"
+      "} catch (inernalError182939227374) {alert(inernalError182939227374)}\n  </script>\n</head>\n<body>\n</body>"
     )
     f.close()
-  
+
   os.chdir('./temp/' + sys.argv[1].replace(".room", ""))
   server_object = HTTPServer(server_address=('', 80),
                              RequestHandlerClass=CGIHTTPRequestHandler)
