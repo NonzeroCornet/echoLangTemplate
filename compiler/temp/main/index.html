@@ -13,7 +13,7 @@ let y = 0;
 let z = 0;
 let err = "Please insert numbers greater than zero.";
 document.body.innerHTML += "A simple calculator program written in echoLang<br>";
-setTimeout(function() {getNums()}, 100);
+setTimeout(function() {getNums(); document.getElementsByTagName("title")[0].innerHTML = title; document.getElementById("icon").href = icon}, 100);
 function getNums() {
 x = Number(prompt("Number 1:"));
 y = Number(prompt("Number 2:"));

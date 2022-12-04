@@ -68,7 +68,7 @@ if sys.argv[1].split(".")[len(sys.argv[1].split("."))-1] == "room":
         elif words[0] == "mute":
           code += "document.body.innerHTML = \"\";\n"
         elif words[0] == "wait":
-          code += "setTimeout(function() {"+words[1]+"()}, "+words[2]+");\n"
+          code += "setTimeout(function() {"+words[1]+"(); document.getElementsByTagName(\"title\")[0].innerHTML = title; document.getElementById(\"icon\").href = icon}, "+words[2]+");\n"
   
   if not os.path.exists("./temp/" + sys.argv[1].replace(".room", "")):
     os.mkdir("./temp/" + sys.argv[1].replace(".room", ""))
