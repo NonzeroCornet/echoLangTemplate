@@ -89,9 +89,9 @@ if args.file.split(".")[len(args.file.split(".")) - 1] == "room":
           code += "document.addEventListener(\"keydown\",(e)=>{if(e.key===\"" + words[
             1] + "\"){" + words[2] + "()}});\n"
 
-  if not os.path.exists(os.getcwd()+'/temp/' + "".join("".join(args.file.replace(".room", "").split(".")).split("/"))):
-    os.mkdir(os.getcwd()+'/temp/' + "".join("".join(args.file.replace(".room", "").split(".")).split("/")))
-  os.chdir(os.getcwd()+'/temp/' + "".join("".join(args.file.replace(".room", "").split(".")).split("/")))
+  if not os.path.exists(os.path.dirname(os.path.realpath(__file__))+'/temp/' + "".join("".join(args.file.replace(".room", "").split(".")).split("/"))):
+    os.mkdir(os.path.dirname(os.path.realpath(__file__))+'/temp/' + "".join("".join(args.file.replace(".room", "").split(".")).split("/")))
+  os.chdir(os.path.dirname(os.path.realpath(__file__))+'/temp/' + "".join("".join(args.file.replace(".room", "").split(".")).split("/")))
   with open('./index.html', 'wt') as f:
     f.write(
       "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n</head>\n<body>\n  <div id=\"body\"></div>\n  <script defer>\ntry{\n"
@@ -101,7 +101,7 @@ if args.file.split(".")[len(args.file.split(".")) - 1] == "room":
     f.close()
 
   if args.compile:
-    print("HTML file can be found at destination:\n"+os.getcwd()+"")
+    print("HTML file can be found at destination:\n"+os.getcwd())
 
   server_object = HTTPServer(server_address=('', args.port),
                              RequestHandlerClass=CGIHTTPRequestHandler)
