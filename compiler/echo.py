@@ -101,7 +101,7 @@ if args.file.split(".")[len(args.file.split(".")) - 1] == "room":
     f.close()
 
   if args.compile:
-    print("HTML file can be found at destination:\n"+os.getcwd())
+    print("\nHTML file can be found at destination:\nfile://"+os.getcwd()+"/index.html\n")
 
   server_object = HTTPServer(server_address=('', args.port),
                              RequestHandlerClass=CGIHTTPRequestHandler)
