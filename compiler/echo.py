@@ -9,6 +9,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", dest= "port" ,type=int, default= "80", help="Website Port [default: 80]")
+parser.add_argument("-c", "--compile", dest= "compile" ,type=bool, default= False, help="Compile as HTML file")
 parser.add_argument('file', metavar= 'filename', type=str, help='.room File to Compile')
 
 args = parser.parse_args()
@@ -100,6 +101,10 @@ if args.file.split(".")[len(args.file.split(".")) - 1] == "room":
     f.close()
 
   os.chdir('./temp/' + args.file.replace(".room", ""))
+  
+  if args.compile:
+    print("HTML file can be found at destination:\n"+os.getcwd())
+
   server_object = HTTPServer(server_address=('', args.port),
                              RequestHandlerClass=CGIHTTPRequestHandler)
   print(f"Serving at URL: http://localhost:{args.port}/")
