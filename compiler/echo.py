@@ -8,7 +8,7 @@ from http.server import HTTPServer, CGIHTTPRequestHandler
 
 os.chdir("compiler")
 
-pre = 'var title = "Echo! echo...";\nvar icon = "";\n'
+pre = 'var title = "Echo! echo...";\nvar icon = "";\nconst db = new Database();\n'
 code = ""
 post = 'document.getElementsByTagName("title")[0].innerHTML = title;\ndocument.getElementById("icon").href = icon;\n'
 
@@ -104,12 +104,27 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
                             + words[2]
                             + "()}});\n"
                         )
+                elif words[0] == "db":
+                  if words[1] == "set":
+                    code += (
+                            'db.update('+ words[3] +', '+ words[2] +', function(data) {'+words[4]+'});\n'
+                        )
+                  elif words[1] == "get":
+                    code += (
+                            'db.get(function(data) {'+words[2]+' = data});\n'
+                        )
+                  elif words[1] == "rm":
+                    code += (
+                            'db.remove('+words[2]+', function(data) {'+words[3]+'});\n'
+                        )
+                  else:
+                    break
 
     if not os.path.exists("./temp/" + sys.argv[1].replace(".room", "")):
         os.mkdir("./temp/" + sys.argv[1].replace(".room", ""))
     with open("temp/" + sys.argv[1].replace(".room", "") + "/index.html", "wt") as f:
         f.write(
-            "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n</head>\n<body>\n  <div id=\"body\"></div>\n  <script defer>\ntry{\n"
+            "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n    <script type="text/javascript" src="https://sdbapi.jdbdu.xyz/v1.0"></script>\n</head>\n<body>\n  <div id=\"body\"></div>\n  <script defer>\ntry{\n"
             + pre
             + code
             + post
