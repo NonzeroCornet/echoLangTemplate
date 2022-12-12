@@ -124,7 +124,7 @@ if sys.argv[1].split(".")[len(sys.argv[1].split(".")) - 1] == "room":
         os.mkdir("./temp/" + sys.argv[1].replace(".room", ""))
     with open("temp/" + sys.argv[1].replace(".room", "") + "/index.html", "wt") as f:
         f.write(
-            "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n    <script type="text/javascript" src="https://sdbapi.jdbdu.xyz/v1.0"></script>\n</head>\n<body>\n  <div id=\"body\"></div>\n  <script defer>\ntry{\n"
+            "<head>\n  <title></title>\n  <link rel='icon' id='icon' />\n    <script type='text/javascript' src='https://sdbapi.jdbdu.xyz/v1.0'></script>\n</head>\n<body>\n  <div id=\"body\"></div>\n  <script defer>\ntry{\n"
             + pre
             + code
             + post
